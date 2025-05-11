@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal 157</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #33ff33;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 2rem;
+      overflow: hidden;
+    }
+    #terminal {
+      white-space: pre-wrap;
+      height: 80vh;
+      overflow-y: auto;
+    }
+    #input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #33ff33;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+    .glitch {
+      animation: glitch 0.3s infinite;
+    }
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-1px, 1px); }
+      40% { transform: translate(-1px, -1px); }
+      60% { transform: translate(1px, 1px); }
+      80% { transform: translate(1px, -1px); }
+      100% { transform: translate(0); }
+    }
+    .media {
+      margin-top: 1rem;
+    }
+    video, audio {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <audio id="bus-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1c00f1e610.mp3?filename=bus-driveby-7195.mp3" preload="auto"></audio>
+  <div id="terminal">
+    [ABRINDO ARQUIVO TEMPORAL_157.LOG]
+
+    > Se você está lendo isso... então algo deu errado.
+
+    > Qual é a sua lembrança mais forte dos 12 anos?
+  </div>
+  <input type="text" id="input" autofocus autocomplete="off">
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const input = document.getElementById('input');
+    const audio = document.getElementById('bus-sound');
+
+    const respostas = [
+      "> Estranho... essa memória não bate com a linha 27A do Arquivo. Você tem certeza?",
+      "> Registro atualizado. Mas... algo parece diferente no seu tom de voz...",
+      "> Você não deveria se lembrar disso. Interessante.",
+      "> Memória aceita. O presente já não é mais o mesmo."
+    ];
+
+    const comandos = {
+      'lembrar': "> Você tenta lembrar... mas tudo vem em fragmentos.",
+      'esquecer': "> Memória removida. Mas o vazio continua.",
+      'viajar': "> O motor range. A realidade dobra. O ônibus está chegando...",
+      'resetar': "> Reiniciando sessão temporal...",
+      'voz': "> [Reproduzindo registro corrompido de voz...]",
+      'visão': "> [Transmitindo imagem distorcida da memória...]"
+    };
+
+    function inserirMídia(tipo) {
+      const mediaDiv = document.createElement('div');
+      mediaDiv.classList.add('media');
+      if (tipo === 'voz') {
+        mediaDiv.innerHTML = `<audio controls src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_eb1b228d4d.mp3?filename=distorted-voice-101.mp3"></audio>`;
+      } else if (tipo === 'visão') {
+        mediaDiv.innerHTML = `<video controls muted>
+          <source src="https://cdn.pixabay.com/download/video/2018/12/12/19867-280452221_large.mp4?filename=glitch-effect-19867.mp4" type="video/mp4">
+        </video>`;
+      }
+      terminal.appendChild(mediaDiv);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    input.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        const valor = input.value.trim().toLowerCase();
+        if (valor) {
+          terminal.innerText += "\n> " + valor;
+
+          if (comandos[valor]) {
+            terminal.innerText += "\n" + comandos[valor] + "\n";
+
+            if (valor === 'viajar') {
+              document.body.classList.add('glitch');
+              audio.play();
+              setTimeout(() => document.body.classList.remove('glitch'), 2000);
+            }
+
+            if (valor === 'resetar') {
+              setTimeout(() => {
+                terminal.innerText = "[ARQUIVO TEMPORAL RESETADO]\n\n> Qual é a sua lembrança mais forte dos 12 anos?";
+              }, 1000);
+            }
+
+            if (valor === 'voz' || valor === 'visão') {
+              setTimeout(() => inserirMídia(valor), 800);
+            }
+
+          } else {
+            const resposta = respostas[Math.floor(Math.random() * respostas.length)];
+            setTimeout(() => {
+              terminal.innerText += "\n" + resposta + "\n";
+              terminal.scrollTop = terminal.scrollHeight;
+            }, 500);
+          }
+
+          input.value = '';
+          terminal.scrollTop = terminal.scrollHeight;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
